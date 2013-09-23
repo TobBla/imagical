@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title>Google Search API Sample</title>
+    <script src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+
+    google.load('search', '1');
+    var imageSearch;
+    var currentPage = 1;
+    var keyWord;
+    
+    
+
+    function searchComplete() {
+      var contentDiv = document.getElementById('content');
+      var cursor = imageSearch.cursor;
+      
+  	  while (currentPage < cursor.pages.length + 1){
+  		imageSearch.gotoPage(cursor.currentPageIndex + 1);
+  		cursor = imageSearch.cursor;
+  	 	var results = imageSearch.results;
+  		contentDiv.innerHTML = contentDiv.innerHTML + "<br>CurrentPage: " + currentPage + "<br>";
+  		
+  		//Put all results into a JSON :)
+  	  	for (var image = 0; image < results.length; image++)
+  	  	{
+  	  		contentDiv.innerHTML = contentDiv.innerHTML + results[image].titleNoFormatting + "<br>";
+  	  	}
+  	  	currentPage++;
+  	  }
+    }
+
+    function searchGoogle(keyWord){
+    	// Create an Image Search instance.
+        imageSearch = new google.search.ImageSearch();
+    	imageSearch.setResultSetSize(8);
+        
+        // Set searchComplete as the callback function when a search is 
+        // complete.  The imageSearch object will have results in it.
+        imageSearch.setSearchCompleteCallback(this, searchComplete, null);
+
+        // Find me a beautiful something.
+        imageSearch.execute(keyWord);
+  	}
+    
+    function OnLoad() {
+    	keyWord = "Sonnenblume";
+    	searchGoogle(keyWord);
+    	
+    }
+    //imageSearch.gotoPage(4);
+    google.setOnLoadCallback(OnLoad); 
+    
+    
+    </script>
+
+  </head>
+  <body style="font-family: Arial;border: 0 none;">
+    <div id="branding"  style="float: left;"></div><br />
+    <div id="content"></div>
+  </body>
+</html>
